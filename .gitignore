@@ -1,0 +1,8 @@
+# Ambiente do Pentaho e binarios pesados (nao versionar)
+_setup/
+*.zip
+*.jar
+
+# Temporarios
+~$*
+*.tmp

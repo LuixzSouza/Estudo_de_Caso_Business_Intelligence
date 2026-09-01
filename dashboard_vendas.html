@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel de Vendas 09/2025</title>
+<style>
+  :root{
+    --bg:#f4f6f4; --surface:#ffffff; --ink:#16261a; --muted:#5b6b60;
+    --line:#e2e8e3; --brand:#1b5e20; --brand-2:#43a047; --accent:#2e7d32;
+    --grid:#eef2ee; --shadow:0 1px 3px rgba(20,40,25,.08),0 8px 24px rgba(20,40,25,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1512; --surface:#161d18; --ink:#e8efe9; --muted:#9db0a3;
+      --line:#26302a; --brand:#66bb6a; --brand-2:#43a047; --accent:#81c784;
+      --grid:#1e2822; --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1512; --surface:#161d18; --ink:#e8efe9; --muted:#9db0a3;
+    --line:#26302a; --brand:#66bb6a; --brand-2:#43a047; --accent:#81c784;
+    --grid:#1e2822; --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    margin:0;padding:32px clamp(16px,4vw,56px);line-height:1.45;}
+  header{max-width:1180px;margin:0 auto 22px;}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-2);font-weight:700;}
+  h1{font-size:clamp(22px,3.4vw,34px);margin:.15em 0 .1em;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:15px;max-width:70ch;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:8px 0 20px;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;box-shadow:var(--shadow);}
+  .kpi .label{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
+  .kpi .value{font-size:clamp(24px,3vw,34px);font-weight:750;letter-spacing:-.02em;margin-top:4px;}
+  .kpi .value small{font-size:.55em;font-weight:600;color:var(--muted);}
+  .grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-bottom:16px;}
+  .grid2b{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .card h2{font-size:15px;margin:0 0 2px;}
+  .card .hint{font-size:12.5px;color:var(--muted);margin:0 0 14px;}
+  @media(max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid2b{grid-template-columns:1fr}}
+  svg{display:block;width:100%;height:auto;overflow:visible;}
+  .axis text{fill:var(--muted);font-size:11px;}
+  .axis line,.axis path{stroke:var(--grid);}
+  .baraxis text{fill:var(--muted);font-size:12px;}
+  .val{fill:var(--ink);font-size:11.5px;font-weight:650;}
+  .foot{color:var(--muted);font-size:12px;text-align:center;margin:26px auto 6px;max-width:1180px;}
+  .tag{display:inline-block;background:color-mix(in srgb,var(--brand) 12%,transparent);
+    color:var(--brand);font-size:12px;font-weight:650;padding:3px 10px;border-radius:999px;margin-right:6px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);}
+  th{color:var(--muted);font-weight:650;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tbody tr:hover{background:color-mix(in srgb,var(--brand) 6%,transparent);}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Business Intelligence · Estudo de Caso 1</div>
+  <h1>Relatório Analítico de Vendas</h1>
+  <p class="sub">Loja de varejo — desempenho de vendas por produto, categoria e dia.
+     Período: <strong>01 a 30 de setembro de 2025</strong>. Público-alvo: gerência comercial e equipe de vendas.</p>
+</header>
+
+<div class="wrap">
+  <!-- KPIs -->
+  <section class="kpis">
+    <div class="card kpi"><div class="label">Faturamento total</div><div class="value">R$ 4.429<small>,46</small></div></div>
+    <div class="card kpi"><div class="label">Vendas registradas</div><div class="value">197</div></div>
+    <div class="card kpi"><div class="label">Itens vendidos</div><div class="value">398</div></div>
+    <div class="card kpi"><div class="label">Ticket médio</div><div class="value">R$ 22<small>,48</small></div></div>
+  </section>
+
+  <!-- Linha temporal + categoria -->
+  <section class="grid2">
+    <div class="card">
+      <h2>Faturamento por dia</h2>
+      <p class="hint">Série temporal — tendência ao longo do mês (recomendação de Few para tendências).</p>
+      <svg id="line" viewBox="0 0 720 300" role="img" aria-label="Faturamento diário de setembro"></svg>
+    </div>
+    <div class="card">
+      <h2>Faturamento por categoria</h2>
+      <p class="hint">Comparação de magnitude — intensidade da cor acompanha o valor.</p>
+      <svg id="bars" viewBox="0 0 420 360" role="img" aria-label="Faturamento por categoria"></svg>
+    </div>
+  </section>
+
+  <!-- Dia da semana + Top produtos -->
+  <section class="grid2b">
+    <div class="card">
+      <h2>Desempenho por dia da semana</h2>
+      <p class="hint">Onde concentrar equipe e reposição.</p>
+      <table>
+        <thead><tr><th>Dia</th><th class="num">Vendas</th><th class="num">Faturamento</th><th class="num">Ticket médio</th></tr></thead>
+        <tbody>
+          <tr><td>Sábado</td><td class="num">45</td><td class="num">R$ 909,68</td><td class="num">R$ 20,22</td></tr>
+          <tr><td>Sexta-feira</td><td class="num">36</td><td class="num">R$ 803,18</td><td class="num">R$ 22,31</td></tr>
+          <tr><td>Quarta-feira</td><td class="num">26</td><td class="num">R$ 743,87</td><td class="num">R$ 28,61</td></tr>
+          <tr><td>Quinta-feira</td><td class="num">27</td><td class="num">R$ 726,58</td><td class="num">R$ 26,91</td></tr>
+          <tr><td>Terça-feira</td><td class="num">22</td><td class="num">R$ 477,48</td><td class="num">R$ 21,70</td></tr>
+          <tr><td>Segunda-feira</td><td class="num">25</td><td class="num">R$ 429,54</td><td class="num">R$ 17,18</td></tr>
+          <tr><td>Domingo</td><td class="num">16</td><td class="num">R$ 339,13</td><td class="num">R$ 21,20</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Top 5 produtos por faturamento</h2>
+      <p class="hint">Os campeões de receita do período.</p>
+      <table>
+        <thead><tr><th>#</th><th>Produto</th><th>Categoria</th><th class="num">Fat.</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Arroz Branco 5kg</td><td>Mercearia</td><td class="num">R$ 404,60</td></tr>
+          <tr><td>2</td><td>Pão Francês 1kg</td><td>Padaria</td><td class="num">R$ 253,30</td></tr>
+          <tr><td>3</td><td>Carne Bovina Patinho 1kg</td><td>Carnes</td><td class="num">R$ 239,40</td></tr>
+          <tr><td>4</td><td>Café Torrado e Moído 500g</td><td>Mercearia</td><td class="num">R$ 226,80</td></tr>
+          <tr><td>5</td><td>Pizza Congelada 400g</td><td>Congelados</td><td class="num">R$ 202,80</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="card" style="margin-bottom:8px">
+    <span class="tag">Leitura para a gerência</span>
+    <p style="margin:10px 0 0;font-size:14px">
+      <strong>Mercearia e Carnes</strong> concentram 36,7% do faturamento — não podem faltar em estoque.
+      <strong>Sábado e sexta</strong> somam 38,6% do mês — reforçar equipe nesses dias. O <strong>ticket médio</strong>
+      é maior no meio da semana (mais compra por cliente) e menor na segunda; e <strong>bebidas e hortifruti</strong>
+      vendem volume com pouca margem — servem para atrair fluxo, não para faturar.
+    </p>
+  </div>
+</div>
+
+<p class="foot">Fonte: Data Warehouse <code>dw_vendas</code> (MySQL) · dataset oficial da disciplina ·
+   camada de visualização: Pentaho Report Designer / painel de apoio · UNIVÁS — Business Intelligence</p>
+
+<script>
+const money = v => "R$ " + v.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+/* ---------- LINE: faturamento por dia ---------- */
+(function(){
+  const data = [["01",74.91],["02",56.35],["03",201.88],["04",158.69],["05",139.0],["06",166.77],["07",161.35],["08",108.27],["09",120.54],["10",131.49],["11",207.79],["12",204.7],["13",244.23],["14",47.88],["15",49.12],["16",88.24],["17",186.57],["18",256.47],["19",259.25],["20",197.03],["21",34.37],["22",147.4],["23",84.57],["24",223.93],["25",103.63],["26",200.23],["27",301.65],["28",95.53],["29",49.84],["30",127.78]];
+  const W=720,H=300,m={t:16,r:16,b:34,l:52};
+  const iw=W-m.l-m.r, ih=H-m.t-m.b;
+  const max=Math.ceil(Math.max(...data.map(d=>d[1]))/50)*50;
+  const x=i=>m.l+ (data.length<2?iw/2:(i*iw/(data.length-1)));
+  const y=v=>m.t+ih-(v/max)*ih;
+  const svg=document.getElementById("line");
+  let s="";
+  // gridlines + y labels
+  for(let g=0;g<=max;g+=100){
+    const yy=y(g);
+    s+=`<g class="axis"><line x1="${m.l}" y1="${yy}" x2="${W-m.r}" y2="${yy}"></line>`+
+       `<text x="${m.l-8}" y="${yy+4}" text-anchor="end">${g}</text></g>`;
+  }
+  // x labels (every 3 days)
+  data.forEach((d,i)=>{ if(i%3===0||i===data.length-1){
+    s+=`<text class="axis" x="${x(i)}" y="${H-14}" text-anchor="middle" style="font-size:11px">${d[0]}</text>`;}});
+  // area + line
+  const path=data.map((d,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(d[1]).toFixed(1)}`).join(" ");
+  s+=`<path d="${path} L${x(data.length-1)},${y(0)} L${x(0)},${y(0)} Z" fill="var(--brand)" opacity="0.10"></path>`;
+  s+=`<path d="${path}" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></path>`;
+  // peak marker (27 = 301.65) and low (21 = 34.37)
+  const peak=data.reduce((a,d,i)=>d[1]>data[a][1]?i:a,0);
+  const low=data.reduce((a,d,i)=>d[1]<data[a][1]?i:a,0);
+  [[peak,"var(--brand)","Pico"],[low,"#b45309","Mín."]].forEach(([i,c,lab])=>{
+    s+=`<circle cx="${x(i)}" cy="${y(data[i][1])}" r="4.5" fill="var(--surface)" stroke="${c}" stroke-width="2.5"></circle>`;
+    const up=data[i][1]>150;
+    s+=`<text class="val" x="${x(i)}" y="${y(data[i][1])+(up?-12:20)}" text-anchor="middle" fill="${c}">${lab} ${money(data[i][1])}</text>`;
+  });
+  svg.innerHTML=s;
+})();
+
+/* ---------- BARS: faturamento por categoria (magnitude = 1 hue) ---------- */
+(function(){
+  const data=[["Mercearia",940.18],["Carnes",687.70],["Padaria",460.52],["Laticínios",455.28],
+    ["Congelados",413.70],["Bebidas",353.67],["Higiene",295.62],["Limpeza",290.37],
+    ["Perfumaria",288.77],["Hortifruti",243.65]];
+  const W=420,H=360,m={t:6,r:64,b:6,l:96};
+  const iw=W-m.l-m.r, bh=(H-m.t-m.b)/data.length, gap=6;
+  const max=Math.max(...data.map(d=>d[1]));
+  const svg=document.getElementById("bars");
+  let s="";
+  data.forEach((d,i)=>{
+    const w=Math.max(3,(d[1]/max)*iw), yy=m.t+i*bh;
+    // sequential: darker = higher value
+    const t=0.35+0.55*(d[1]/max);
+    const fill=`color-mix(in srgb, var(--brand) ${Math.round(t*100)}%, var(--surface))`;
+    s+=`<rect x="${m.l}" y="${yy+gap/2}" width="${w}" height="${bh-gap}" rx="4" fill="${fill}"></rect>`;
+    s+=`<text class="baraxis" x="${m.l-8}" y="${yy+bh/2+4}" text-anchor="end">${d[0]}</text>`;
+    s+=`<text class="val" x="${m.l+w+6}" y="${yy+bh/2+4}">${money(d[1])}</text>`;
+  });
+  svg.innerHTML=s;
+})();
+</script>
+</body>
+</html>

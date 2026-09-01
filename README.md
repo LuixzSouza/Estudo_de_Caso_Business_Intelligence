@@ -1,0 +1,46 @@
+# Estudo de Caso 1 — Business Intelligence
+
+Relatório analítico de vendas desenvolvido para a disciplina de **Business Intelligence**
+(Sistemas de Informação, 8º período — UNIVÁS, Prof. Luiz Gustavo Dias).
+
+Modelagem dimensional em **MySQL** (Data Warehouse) e camada de visualização em
+**Pentaho Report Designer (PRD)**, com um painel de apoio em HTML para a apresentação.
+
+## Objetivo
+
+Apresentar, ao gerente comercial e à equipe de vendas, um relatório com as vendas do
+período — **data, produto, categoria e valor total**, ordenado por data — a partir de um
+modelo estrela (star schema): fato `f_vendas` + dimensões `d_produto` e `d_data`.
+
+> **Base de dados:** utilizamos o dataset oficial do repositório da disciplina
+> (`d_produto.sql` — catálogo de varejo com 50 produtos e 10 categorias) **sem alterações**,
+> e construímos sobre ele as tabelas `d_data` e `f_vendas`.
+
+## Arquivos
+
+| Arquivo | Descrição |
+|---|---|
+| `01_modelo_dimensional.sql` | Cria o banco `dw_vendas`, as 3 tabelas e carrega os dados |
+| `02_consulta_relatorio.sql` | Consulta principal do relatório + 6 consultas de apoio |
+| `Relatorio_Estudo_de_Caso_1.docx` | Relatório formal (entrega ao professor) |
+| `dashboard_vendas.html` | Painel visual para projetar na apresentação |
+| `RESUMO_ESTUDO_DE_CASO_1.md` | Resumo do trabalho + roteiro de apresentação |
+| `GUIA_PENTAHO.md` | Passo a passo: MySQL + instalação/uso do Pentaho |
+
+## Como executar
+
+1. **MySQL:** rodar `01_modelo_dimensional.sql` e depois `02_consulta_relatorio.sql`.
+2. **Pentaho:** seguir o `GUIA_PENTAHO.md` (conectar via JDBC ao banco `dw_vendas` e usar
+   a consulta principal como Data Set).
+
+## Principais resultados (setembro/2025)
+
+- Faturamento total: **R$ 4.429,46** em **197 vendas** (398 itens), ticket médio **R$ 22,48**.
+- Categorias líderes: **Mercearia (21,2%)** e **Carnes (15,5%)**.
+- Dias mais fortes: **sábado e sexta** (38,6% do faturamento).
+
+## Fundamentação teórica
+
+O relatório aplica os pensamentos de **Inmon** (integridade / fonte única de verdade),
+**Kimball** (modelagem dimensional), **Davenport** (cultura analítica / decisão) e
+**Few** (comunicação visual). Detalhes na seção 4 do relatório em `.docx`.
