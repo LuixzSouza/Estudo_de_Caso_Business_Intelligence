@@ -6,79 +6,65 @@ na sua máquina (ou rode você mesmo no PowerShell, sem o `!`).
 
 ---
 
-## Parte 1 — Criar o banco no MySQL
+## Parte 1 — Banco de dados (JÁ FEITO ✅)
 
-Você tem duas instâncias: **MySQL80 (porta 3306)** e **MySQLThaiCross (porta 3307)**.
-Vamos usar a 3306. O executável do cliente fica em:
-`C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe`
+O banco `dw_vendas` foi criado e carregado na instância **MySQL 8.4 na porta 3307**
+(`MySQLThaiCross`), que aceita `root` **sem senha**. A instância da porta 3306 tem
+senha de root desconhecida, por isso não foi usada.
 
-### 1.1 Descobrir/confirmar a senha do root
+Cliente: `C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe`
 
-```
-! & 'C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe' -u root -e "SELECT VERSION();"
-```
-
-- Se mostrar a versão → a senha é vazia, siga para 1.2.
-- Se pedir senha (*Access denied*) → abra o **MySQL Workbench**, a conexão
-  "Local instance MySQL80" costuma ter a senha salva. Anote-a e, nos comandos
-  abaixo, troque `-u root` por `-u root -p` (ele vai perguntar a senha).
-
-### 1.2 Rodar o script que cria tudo
+Conferência (opcional):
 
 ```
-! & 'C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe' -u root < "C:\Users\Administrador\Desktop\LuixzSouza\Estudo_de_Caso\01_modelo_dimensional.sql"
+! & 'C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe' -h 127.0.0.1 -P 3307 -u root -e "USE dw_vendas; SELECT COUNT(*) produtos FROM d_produto; SELECT COUNT(*) vendas FROM f_vendas; SELECT SUM(vlr_total) faturamento FROM f_vendas;"
 ```
 
-### 1.3 Conferir que carregou
+Resultado esperado: **50 produtos, 197 vendas, faturamento 4429.46**.
+
+Ver o relatório inteiro no terminal:
 
 ```
-! & 'C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe' -u root -e "USE dw_vendas; SELECT COUNT(*) AS produtos FROM d_produto; SELECT COUNT(*) AS vendas FROM f_vendas; SELECT SUM(vlr_total) AS faturamento FROM f_vendas;"
-```
-
-Esperado: **50 produtos, 197 vendas, faturamento ≈ 4429.46**.
-
-### 1.4 (Opcional) Ver o relatório direto no terminal
-
-```
-! & 'C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe' -u root -t < "C:\Users\Administrador\Desktop\LuixzSouza\Estudo_de_Caso\02_consulta_relatorio.sql"
+! & 'C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe' -h 127.0.0.1 -P 3307 -u root -t --default-character-set=utf8mb4 < "C:\Users\Administrador\Desktop\LuixzSouza\Estudo_de_Caso\02_consulta_relatorio.sql"
 ```
 
 ---
 
-## Parte 2 — Baixar o Pentaho Report Designer (PRD)
+## Parte 2 — Pentaho Report Designer (JÁ INSTALADO ✅)
 
-> **Importante:** o download **precisa ser feito pelo navegador**. O SourceForge tem
-> proteção anti-robô que bloqueia download por script/linha de comando (só devolve uma
-> página HTML). Pelo navegador é 1 clique normal.
+Não precisa baixar nada. O PRD já está em:
 
-**O driver JDBC do MySQL já está baixado** em
-`_setup\mysql-connector-j-8.4.0.jar` — não precisa baixar de novo.
+`C:\Users\Administrador\Desktop\LuixzSouza\pentaho\report-designer\report-designer.bat`
 
-### 2.1 Baixar o PRD (Community Edition 9.4, ~1 GB) pelo navegador
+O driver JDBC do MySQL (`mysql-connector-java-5.1.49.jar`) já vem dentro dele em
+`lib\jdbc\` e foi testado com sucesso contra o MySQL 8.4 desta máquina.
 
-1. Abra este link no navegador:
-   **https://sourceforge.net/projects/pentaho/files/Pentaho%209.4/client-tools/prd-ce-9.4.0.0-343.zip/download**
-2. O download começa sozinho em alguns segundos.
-3. Quando terminar, **mova o arquivo `prd-ce-9.4.0.0-343.zip` para a pasta `_setup`**
-   (dentro de `Estudo_de_Caso`).
-
-> Dica: pode digitar `! ` no chat que eu descompacto e configuro o JDBC pra você
-> assim que o arquivo estiver na pasta `_setup` — é só me avisar "já baixei".
-
-### 2.2 Descompactar e instalar o driver JDBC (eu faço, ou você roda)
-
-Depois que o zip estiver em `_setup`, rode (ou peça pra mim):
+**Atenção ao Java:** o PRD é a versão 5.0.1 e precisa de **Java 8**. O Java padrão do
+sistema é o 17, que não roda o PRD. Para abrir, use o JRE 8 que está instalado:
 
 ```
-! Expand-Archive "C:\Users\Administrador\Desktop\LuixzSouza\Estudo_de_Caso\_setup\prd-ce-9.4.0.0-343.zip" -DestinationPath "C:\Users\Administrador\Desktop\LuixzSouza\Estudo_de_Caso\_setup\PRD" -Force
-! Copy-Item "C:\Users\Administrador\Desktop\LuixzSouza\Estudo_de_Caso\_setup\mysql-connector-j-8.4.0.jar" "C:\Users\Administrador\Desktop\LuixzSouza\Estudo_de_Caso\_setup\PRD\report-designer\lib\"
+! & 'C:\Program Files (x86)\Java\jre1.8.0_461\bin\javaw.exe' -Xmx512M -jar 'C:\Users\Administrador\Desktop\LuixzSouza\pentaho\report-designer\launcher.jar'
 ```
 
-### 2.3 Abrir o PRD
+(É preciso estar na pasta do report-designer — ou peça pra mim que eu abro.)
 
-Dê dois cliques em:
-`_setup\PRD\report-designer\report-designer.bat`
-(O Java 17 já está instalado na máquina, então ele abre.)
+---
+
+## Dados da conexão JDBC (para colar no PRD)
+
+| Campo | Valor |
+|---|---|
+| Connection Name | `dw_vendas` |
+| Database Type | MySQL |
+| Access | Native (JDBC) |
+| Host Name | `127.0.0.1` |
+| Port | `3307` |
+| Database Name | `dw_vendas` |
+| User Name | `root` |
+| Password | *(deixe em branco)* |
+
+Driver: `org.gjt.mm.mysql.Driver`
+URL completa: `jdbc:mysql://127.0.0.1:3307/dw_vendas`
 
 ---
 
@@ -90,9 +76,9 @@ Dê dois cliques em:
    - **Connection Name:** dw_vendas
    - **Database Type:** MySQL
    - **Access:** Native (JDBC)
-   - **Host Name:** localhost   **Port:** 3306
+   - **Host Name:** 127.0.0.1   **Port:** 3307
    - **Database Name:** dw_vendas
-   - **User Name:** root   **Password:** (a senha do passo 1.1; vazia se for o caso)
+   - **User Name:** root   **Password:** *(em branco)*
    - Clique em **Test** → deve dizer conexão OK.
 4. Na mesma janela, em **Query**, cole a **consulta principal** (está no arquivo
    `02_consulta_relatorio.sql`, a de número 1):
