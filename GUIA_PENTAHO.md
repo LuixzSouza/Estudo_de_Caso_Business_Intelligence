@@ -108,6 +108,11 @@ URL completa: `jdbc:mysql://127.0.0.1:3307/dw_vendas`
 
 ## Parte 4 — Filtro de período (ano / mês / dia)
 
+> **Já está pronto no arquivo.** O `relatorio_vendas.prpt` do repositório vem com os três
+> parâmetros, as queries filtradas e o mapeamento do subrelatório. Abra-o no PRD e vá
+> direto em **File → Preview**. O passo a passo abaixo fica como documentação de como
+> foi montado (e para refazer, se precisar).
+
 O DW cobre **janeiro a setembro de 2025** (273 dias, 1535 vendas) desde o script
 `03_periodos_adicionais.sql`, e o relatório tem três parâmetros que permitem olhar
 um ano inteiro, um mês ou um único dia. As queries prontas estão na **seção 8** do
@@ -180,6 +185,8 @@ porque os 197 registros de setembro não foram alterados.
 | `01_modelo_dimensional.sql` | Cria o banco e carrega os dados |
 | `02_consulta_relatorio.sql` | Consulta principal + apoio + queries parametrizadas (seção 8) |
 | `03_periodos_adicionais.sql` | Amplia o DW para janeiro–agosto/2025 (filtro de período) |
+| `relatorio_vendas.prpt` | Relatório do PRD, com filtro de período pronto |
+| `relatorio_vendas_setembro.pdf` | PDF de entrega (recorte de setembro/2025) |
 | `Relatorio_Estudo_de_Caso_1_ACENTOS.docx` | Relatório formal (entrega ao professor) |
 | `dashboard_vendas.html` | Painel visual para projetar na apresentação |
 | `GUIA_PENTAHO.md` | Este guia |
