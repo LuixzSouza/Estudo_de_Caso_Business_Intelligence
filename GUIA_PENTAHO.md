@@ -126,8 +126,20 @@ Aba **Data** → botão direito em **Parameters** → **Add Parameter**. Os trê
 | Name | Label | Value Type | Display Type | Query (lista) | Value / Display Column | Default |
 |---|---|---|---|---|---|---|
 | `p_ano` | Ano | Integer | Drop Down | `q_anos` | `valor` / `rotulo` | `2025` |
-| `p_mes` | Mês | Integer | Drop Down | `q_meses` | `valor` / `rotulo` | `9` |
-| `p_dia` | Dia | Integer | Drop Down | `q_dias` | `valor` / `rotulo` | `0` |
+| `p_mes` | Mês | **Long** | Drop Down | `q_meses` | `valor` / `rotulo` | `9` |
+| `p_dia` | Dia | **Long** | Drop Down | `q_dias` | `valor` / `rotulo` | `0` |
+
+> **Cuidado com o tipo — foi o que quebrou o filtro na primeira versão.** `q_meses` e
+> `q_dias` usam `UNION ALL` com o literal `0` para criar a opção "todos"; nesse caso o
+> MySQL devolve a coluna como **BIGINT**, que o driver JDBC entrega como `java.lang.Long`.
+> Se o parâmetro estiver declarado `Integer` e com `strict-values`, o PRD **descarta em
+> silêncio** o valor escolhido no dropdown (`This prompt value is of an invalid type`),
+> ele vira `NULL`, e `(NULL = 0 OR d.num_dia = NULL)` não retorna nenhuma linha — o
+> relatório abre vazio sem mensagem de erro. Por isso `p_mes` e `p_dia` são `Long`.
+> `p_ano` continua `Integer` porque `q_anos` não tem `UNION`: vem direto da coluna `INT`.
+>
+> Sintoma típico: o preview abre certo (o default vem do XML, já tipado) e só quebra
+> quando você escolhe um valor no dropdown.
 
 As listas vêm das queries `q_anos`, `q_meses` e `q_dias` (seções 8.4 a 8.6), então o
 filtro reflete automaticamente o que existe no DW — carregar mais meses amplia o
