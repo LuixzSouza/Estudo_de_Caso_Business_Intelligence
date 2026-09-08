@@ -20,7 +20,9 @@ Conferência (opcional):
 ! & 'C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe' -h 127.0.0.1 -P 3307 -u root -e "USE dw_vendas; SELECT COUNT(*) produtos FROM d_produto; SELECT COUNT(*) vendas FROM f_vendas; SELECT SUM(vlr_total) faturamento FROM f_vendas;"
 ```
 
-Resultado esperado: **50 produtos, 197 vendas, faturamento 4429.46**.
+Resultado esperado: **50 produtos, 1535 vendas, faturamento 49796.79** (janeiro a
+setembro/2025). Só setembro continua sendo **197 vendas / 4429.46** — ver
+`03_periodos_adicionais.sql` e a Parte 4 deste guia.
 
 Ver o relatório inteiro no terminal:
 
@@ -104,12 +106,80 @@ URL completa: `jdbc:mysql://127.0.0.1:3307/dw_vendas`
 
 ---
 
+## Parte 4 — Filtro de período (ano / mês / dia)
+
+O DW cobre **janeiro a setembro de 2025** (273 dias, 1535 vendas) desde o script
+`03_periodos_adicionais.sql`, e o relatório tem três parâmetros que permitem olhar
+um ano inteiro, um mês ou um único dia. As queries prontas estão na **seção 8** do
+`02_consulta_relatorio.sql`.
+
+### 4.1 Criar os parâmetros
+
+Aba **Data** → botão direito em **Parameters** → **Add Parameter**. Os três são
+`Integer`, o que evita a caixa de data em vermelho por causa de formato/locale:
+
+| Name | Label | Value Type | Display Type | Query (lista) | Value / Display Column | Default |
+|---|---|---|---|---|---|---|
+| `p_ano` | Ano | Integer | Drop Down | `q_anos` | `valor` / `rotulo` | `2025` |
+| `p_mes` | Mês | Integer | Drop Down | `q_meses` | `valor` / `rotulo` | `9` |
+| `p_dia` | Dia | Integer | Drop Down | `q_dias` | `valor` / `rotulo` | `0` |
+
+As listas vêm das queries `q_anos`, `q_meses` e `q_dias` (seções 8.4 a 8.6), então o
+filtro reflete automaticamente o que existe no DW — carregar mais meses amplia o
+dropdown sem tocar no relatório. O valor **0** significa "todos": `p_mes = 0` mostra o
+ano inteiro, `p_dia = 0` mostra o mês inteiro. Usamos 0 em vez de `NULL` porque
+parâmetro nulo em driver JDBC costuma dar erro de tipo.
+
+`q_meses` e `q_dias` usam `${p_ano}` / `${p_mes}` dentro da própria query — isso é
+cascateamento: ao trocar o ano, a lista de meses se refaz.
+
+### 4.2 Aplicar o filtro nas queries
+
+Troque `q_vendas` pela versão da seção 8.1 e `q_categoria` pela 8.2. O filtro é:
+
+```sql
+WHERE d.num_ano = ${p_ano}
+  AND (${p_mes} = 0 OR d.num_mes = ${p_mes})
+  AND (${p_dia} = 0 OR d.num_dia = ${p_dia})
+```
+
+Atenção: a `q_categoria` precisa do `INNER JOIN d_data` (a versão sem filtro não
+tinha), senão o gráfico ignora o período e fica inconsistente com a listagem.
+
+### 4.3 Passar os parâmetros ao subrelatório do gráfico
+
+Selecione o elemento **subreport** no relatório pai → aba **Data** → tabela
+**Import Parameters**, e mapeie os três (nome igual dos dois lados):
+
+| Outer Name (pai) | Inner Name (subrelatório) |
+|---|---|
+| `p_ano` | `p_ano` |
+| `p_mes` | `p_mes` |
+| `p_dia` | `p_dia` |
+
+Sem esse mapeamento o gráfico vem vazio ou dá erro de parâmetro desconhecido.
+
+### 4.4 Casos de teste (valores conferidos no banco)
+
+| p_ano | p_mes | p_dia | Linhas | Faturamento |
+|---|---|---|---|---|
+| 2025 | 9 (Setembro) | 0 | 197 | 4.429,46 |
+| 2025 | 0 (todos) | 0 | 1535 | 49.796,79 |
+| 2025 | 8 (Agosto) | 0 | 172 | 6.144,24 |
+| 2025 | 3 (Março) | 15 | 4 | 51,31 |
+
+A primeira linha é o cenário original da entrega — ele continua fechando igual,
+porque os 197 registros de setembro não foram alterados.
+
+---
+
 ## Resumo dos artefatos
 
 | Arquivo | Para quê |
 |---|---|
 | `01_modelo_dimensional.sql` | Cria o banco e carrega os dados |
-| `02_consulta_relatorio.sql` | Consulta principal + apoio |
+| `02_consulta_relatorio.sql` | Consulta principal + apoio + queries parametrizadas (seção 8) |
+| `03_periodos_adicionais.sql` | Amplia o DW para janeiro–agosto/2025 (filtro de período) |
 | `Relatorio_Estudo_de_Caso_1_ACENTOS.docx` | Relatório formal (entrega ao professor) |
 | `dashboard_vendas.html` | Painel visual para projetar na apresentação |
 | `GUIA_PENTAHO.md` | Este guia |

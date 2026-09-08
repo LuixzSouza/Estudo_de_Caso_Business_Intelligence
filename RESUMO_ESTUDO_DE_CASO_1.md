@@ -22,6 +22,12 @@
 | Ordenar por data da venda | `ORDER BY d.dat_venda, p.nome_produto` |
 | Fato `f_vendas` + dimensões `d_produto` e `d_data` | Star schema criado em MySQL (arquivo 01) |
 
+> **Extra (além do exigido):** o relatório no PRD ganhou filtro de **ano / mês / dia**,
+> com as opções lidas do próprio `d_data`. Para o filtro fazer sentido, o DW foi
+> ampliado para janeiro–setembro/2025 (273 dias, 1.535 vendas, R$ 49.796,79) pelo
+> script `03_periodos_adicionais.sql`. Os 197 registros de setembro seguem intactos,
+> então todos os números da seção 4 continuam válidos como o recorte de setembro.
+
 ## 2. Como foi feito — 5 etapas
 
 1. **Levantamento** — leitura do enunciado e do dataset oficial do repositório da disciplina.

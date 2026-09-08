@@ -21,7 +21,8 @@ modelo estrela (star schema): fato `f_vendas` + dimensões `d_produto` e `d_data
 | Arquivo | Descrição |
 |---|---|
 | `01_modelo_dimensional.sql` | Cria o banco `dw_vendas`, as 3 tabelas e carrega os dados |
-| `02_consulta_relatorio.sql` | Consulta principal do relatório + 6 consultas de apoio |
+| `02_consulta_relatorio.sql` | Consulta principal do relatório + 6 consultas de apoio + queries parametrizadas |
+| `03_periodos_adicionais.sql` | Amplia o DW para janeiro–agosto/2025, para o filtro de período |
 | `Relatorio_Estudo_de_Caso_1.docx` | Relatório formal (entrega ao professor) |
 | `dashboard_vendas.html` | Painel visual para projetar na apresentação |
 | `RESUMO_ESTUDO_DE_CASO_1.md` | Resumo do trabalho + roteiro de apresentação |
@@ -29,15 +30,30 @@ modelo estrela (star schema): fato `f_vendas` + dimensões `d_produto` e `d_data
 
 ## Como executar
 
-1. **MySQL:** rodar `01_modelo_dimensional.sql` e depois `02_consulta_relatorio.sql`.
+1. **MySQL:** rodar `01_modelo_dimensional.sql`, depois `03_periodos_adicionais.sql` e
+   por fim `02_consulta_relatorio.sql`.
 2. **Pentaho:** seguir o `GUIA_PENTAHO.md` (conectar via JDBC ao banco `dw_vendas` e usar
-   a consulta principal como Data Set).
+   a consulta principal como Data Set). A Parte 4 do guia monta o filtro de período.
 
 ## Principais resultados (setembro/2025)
 
 - Faturamento total: **R$ 4.429,46** em **197 vendas** (398 itens), ticket médio **R$ 22,48**.
 - Categorias líderes: **Mercearia (21,2%)** e **Carnes (15,5%)**.
 - Dias mais fortes: **sábado e sexta** (38,6% do faturamento).
+
+## Filtro de período
+
+O relatório no PRD tem três parâmetros — **Ano**, **Mês** e **Dia** — com listas
+alimentadas por consulta ao próprio `d_data`, de modo que as opções acompanham o que
+está carregado no DW. `Mês = 0` mostra o ano inteiro e `Dia = 0` mostra o mês inteiro.
+
+Para o filtro ter o que filtrar, o DW foi ampliado de 1 para **9 meses**
+(`03_periodos_adicionais.sql`): janeiro a setembro de 2025, **273 dias** e
+**1.535 vendas**, faturamento total de **R$ 49.796,79**.
+
+Os 197 registros de setembro/2025 **não foram alterados** — por isso a análise acima e
+o relatório formal em `.docx` seguem válidos: são o recorte de setembro, reproduzível
+pelo filtro com `Ano = 2025, Mês = Setembro, Dia = 0`.
 
 ## Fundamentação teórica
 
