@@ -188,6 +188,28 @@ Sem esse mapeamento o gráfico vem vazio ou dá erro de parâmetro desconhecido.
 A primeira linha é o cenário original da entrega — ele continua fechando igual,
 porque os 197 registros de setembro não foram alterados.
 
+### 4.5 Formatação visual
+
+O `.prpt` do repositório já vem formatado. As decisões, caso precise refazer:
+
+| Item | Escolha | Porquê |
+|---|---|---|
+| Fonte | `Helvetica` | com `SansSerif` o motor calcula mal a largura do espaço e as palavras saem grudadas ("RelatórioAnalíticode Vendas") |
+| `font-size` | sempre inteiro | o parser do bundle rejeita `7.5` com *Failed to parse value* |
+| Grade | 532pt (carta − margens de 40) em 4 colunas: 72 / 234 / 118 / 108 | valor sempre alinhado à direita |
+| Cabeçalho | faixa `#1F3B57` com rótulos brancos, no **page-header** | repete em todas as páginas; os rótulos ficavam na banda Details e se repetiam a cada linha |
+| Linhas | altura 14pt, borda inferior `#E3E8ED` | 197 linhas cabem em 5 páginas em vez de 17 |
+| Rodapé | `PageOfPagesFunction` com formato `Página {0} de {1}` | use `text-field` para exibi-la; `content-field` não renderiza texto |
+| Gráfico | barras `#1F3B57`, sem legenda, eixo começando em zero | uma série só — legenda "Series 1" era ruído |
+
+Duas armadilhas do bundle 5.0.1 que custam tempo:
+
+- O **page-header não fica no `layout.xml`** — ele mora no `styles.xml`, com prefixo
+  `layout:`. No `layout.xml` a raiz só aceita `report-header`, `group`, `report-footer`,
+  `crosstab`, `preprocessor` e `layout-processors`; qualquer outra banda é ignorada em
+  silêncio.
+- O elemento de texto com parâmetros embutidos é `<message>`, não `message-field`.
+
 ---
 
 ## Resumo dos artefatos
@@ -199,6 +221,7 @@ porque os 197 registros de setembro não foram alterados.
 | `03_periodos_adicionais.sql` | Amplia o DW para janeiro–agosto/2025 (filtro de período) |
 | `relatorio_vendas.prpt` | Relatório do PRD, com filtro de período pronto |
 | `relatorio_vendas_setembro.pdf` | PDF de entrega (recorte de setembro/2025) |
+| `preview_pagina1.png` / `preview_ultima_pagina.png` | Como o relatório fica impresso |
 | `Relatorio_Estudo_de_Caso_1_ACENTOS.docx` | Relatório formal (entrega ao professor) |
 | `dashboard_vendas.html` | Painel visual para projetar na apresentação |
 | `GUIA_PENTAHO.md` | Este guia |
