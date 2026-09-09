@@ -23,6 +23,7 @@ modelo estrela (star schema): fato `f_vendas` + dimensões `d_produto` e `d_data
 | `01_modelo_dimensional.sql` | Cria o banco `dw_vendas`, as 3 tabelas e carrega os dados |
 | `02_consulta_relatorio.sql` | Consulta principal do relatório + 6 consultas de apoio + queries parametrizadas |
 | `03_periodos_adicionais.sql` | Amplia o DW para janeiro–agosto/2025, para o filtro de período |
+| `04_periodos_2024_e_4tri_2025.sql` | Acrescenta 2024 inteiro e out–dez/2025 (dois anos no filtro) |
 | `Relatorio_Estudo_de_Caso_1.docx` | Relatório formal (entrega ao professor) |
 | `dashboard_vendas.html` | Painel visual para projetar na apresentação |
 | `RESUMO_ESTUDO_DE_CASO_1.md` | Resumo do trabalho + roteiro de apresentação |
@@ -30,8 +31,8 @@ modelo estrela (star schema): fato `f_vendas` + dimensões `d_produto` e `d_data
 
 ## Como executar
 
-1. **MySQL:** rodar `01_modelo_dimensional.sql`, depois `03_periodos_adicionais.sql` e
-   por fim `02_consulta_relatorio.sql`.
+1. **MySQL:** rodar na ordem `01_modelo_dimensional.sql`, `03_periodos_adicionais.sql`,
+   `04_periodos_2024_e_4tri_2025.sql` e por fim `02_consulta_relatorio.sql`.
 2. **Pentaho:** seguir o `GUIA_PENTAHO.md` (conectar via JDBC ao banco `dw_vendas` e usar
    a consulta principal como Data Set). A Parte 4 do guia monta o filtro de período.
 
@@ -47,9 +48,21 @@ O relatório no PRD tem três parâmetros — **Ano**, **Mês** e **Dia** — co
 alimentadas por consulta ao próprio `d_data`, de modo que as opções acompanham o que
 está carregado no DW. `Mês = 0` mostra o ano inteiro e `Dia = 0` mostra o mês inteiro.
 
-Para o filtro ter o que filtrar, o DW foi ampliado de 1 para **9 meses**
-(`03_periodos_adicionais.sql`): janeiro a setembro de 2025, **273 dias** e
-**1.535 vendas**, faturamento total de **R$ 49.796,79**.
+Para o filtro ter o que filtrar, o DW foi ampliado em duas etapas:
+
+| Script | Período acrescentado | |
+|---|---|---|
+| `03` | jan–ago/2025 | o filtro de mês/dia passa a ter o que comparar |
+| `04` | 2024 inteiro + out–dez/2025 | o filtro de **ano** passa a ter duas opções |
+
+Hoje o DW cobre **2024 e 2025 completos**: **731 dias** e **4.420 vendas**, somando
+**R$ 146.993,60**. Novembro e dezembro têm mais vendas por dia que os demais meses,
+para haver sazonalidade visível no gráfico.
+
+| Ano | Dias | Vendas | Faturamento |
+|---|---:|---:|---:|
+| 2024 | 366 | 2.196 | R$ 74.032,38 |
+| 2025 | 365 | 2.224 | R$ 72.961,22 |
 
 Os 197 registros de setembro/2025 **não foram alterados** — por isso a análise acima e
 o relatório formal em `.docx` seguem válidos: são o recorte de setembro, reproduzível

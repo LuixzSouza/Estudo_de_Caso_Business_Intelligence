@@ -20,8 +20,7 @@ Conferência (opcional):
 ! & 'C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe' -h 127.0.0.1 -P 3307 -u root -e "USE dw_vendas; SELECT COUNT(*) produtos FROM d_produto; SELECT COUNT(*) vendas FROM f_vendas; SELECT SUM(vlr_total) faturamento FROM f_vendas;"
 ```
 
-Resultado esperado: **50 produtos, 1535 vendas, faturamento 49796.79** (janeiro a
-setembro/2025). Só setembro continua sendo **197 vendas / 4429.46** — ver
+Resultado esperado: **50 produtos, 4420 vendas, faturamento 146993.60** (2024 e 2025). Só setembro continua sendo **197 vendas / 4429.46** — ver
 `03_periodos_adicionais.sql` e a Parte 4 deste guia.
 
 Ver o relatório inteiro no terminal:
@@ -113,8 +112,8 @@ URL completa: `jdbc:mysql://127.0.0.1:3307/dw_vendas`
 > direto em **File → Preview**. O passo a passo abaixo fica como documentação de como
 > foi montado (e para refazer, se precisar).
 
-O DW cobre **janeiro a setembro de 2025** (273 dias, 1535 vendas) desde o script
-`03_periodos_adicionais.sql`, e o relatório tem três parâmetros que permitem olhar
+O DW cobre **2024 e 2025 completos** (731 dias, 4.420 vendas) depois dos scripts
+`03_periodos_adicionais.sql` e `04_periodos_2024_e_4tri_2025.sql`, e o relatório tem três parâmetros que permitem olhar
 um ano inteiro, um mês ou um único dia. As queries prontas estão na **seção 8** do
 `02_consulta_relatorio.sql`.
 
@@ -181,9 +180,12 @@ Sem esse mapeamento o gráfico vem vazio ou dá erro de parâmetro desconhecido.
 | p_ano | p_mes | p_dia | Linhas | Faturamento |
 |---|---|---|---|---|
 | 2025 | 9 (Setembro) | 0 | 197 | 4.429,46 |
-| 2025 | 0 (todos) | 0 | 1535 | 49.796,79 |
-| 2025 | 8 (Agosto) | 0 | 172 | 6.144,24 |
+| 2025 | 0 (todos) | 0 | 2224 | 72.961,22 |
 | 2025 | 3 (Março) | 15 | 4 | 51,31 |
+| 2025 | 9 (Setembro) | 1 | 4 | 74,91 |
+| 2024 | 0 (todos) | 0 | 2196 | 74.032,38 |
+| 2024 | 12 (Dezembro) | 0 | 262 | 8.772,61 |
+| 2024 | 12 (Dezembro) | 25 | 7 | 307,85 |
 
 A primeira linha é o cenário original da entrega — ele continua fechando igual,
 porque os 197 registros de setembro não foram alterados.
@@ -219,6 +221,7 @@ Duas armadilhas do bundle 5.0.1 que custam tempo:
 | `01_modelo_dimensional.sql` | Cria o banco e carrega os dados |
 | `02_consulta_relatorio.sql` | Consulta principal + apoio + queries parametrizadas (seção 8) |
 | `03_periodos_adicionais.sql` | Amplia o DW para janeiro–agosto/2025 (filtro de período) |
+| `04_periodos_2024_e_4tri_2025.sql` | Acrescenta 2024 e out–dez/2025 (dois anos no filtro) |
 | `relatorio_vendas.prpt` | Relatório do PRD, com filtro de período pronto |
 | `relatorio_vendas_setembro.pdf` | PDF de entrega (recorte de setembro/2025) |
 | `preview_pagina1.png` / `preview_ultima_pagina.png` | Como o relatório fica impresso |

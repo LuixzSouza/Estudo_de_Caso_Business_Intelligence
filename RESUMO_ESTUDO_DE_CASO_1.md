@@ -24,8 +24,9 @@
 
 > **Extra (além do exigido):** o relatório no PRD ganhou filtro de **ano / mês / dia**,
 > com as opções lidas do próprio `d_data`. Para o filtro fazer sentido, o DW foi
-> ampliado para janeiro–setembro/2025 (273 dias, 1.535 vendas, R$ 49.796,79) pelo
-> script `03_periodos_adicionais.sql`. Os 197 registros de setembro seguem intactos,
+> ampliado para 2024 e 2025 completos (731 dias, 4.420 vendas, R$ 146.993,60) pelos
+> scripts `03_periodos_adicionais.sql` e `04_periodos_2024_e_4tri_2025.sql`, o que dá
+> dois anos e doze meses para o filtro comparar. Os 197 registros de setembro seguem intactos,
 > então todos os números da seção 4 continuam válidos como o recorte de setembro.
 
 ## 2. Como foi feito — 5 etapas
